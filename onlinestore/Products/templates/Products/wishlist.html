@@ -1,0 +1,89 @@
+{% extends 'home.html' %}
+{%load static %}
+
+{% block main %}
+<!-- Breadcumbs start -->
+<div class="e-breadcumb-wrap text-center">
+    <h2 class="e-breadcumb-title">علاقه مندیها</h2>
+    <ul class="e-breadcumb-kist">
+        <li>
+            <a href="{% url 'home' %}">خانه </a>
+        </li>
+        <li>
+            <a href=''>علاقه مندیها </a>
+        </li>
+    </ul>
+</div>
+<!-- Product Category start -->
+<div class="e-shopcart-wrap">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="e-shopcart-sec">                    
+                    <div class="shopcart-table-wrap mb-30">
+                        <form class="table-responsive">
+                            <table class="shopcart-table">
+                                <thead>
+                                  <tr>
+                                    <th>محصول </th>
+                                    <th>قیمت </th>                                    
+                                    <th>وضعیت</th>
+                                    <th>گزینه</th>
+                                    <th>&nbsp;</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                {% csrf_token %}
+                                {% if wishlist  %}
+                                {% for elm  in wishlist.product.all %}
+                                  <tr class="e-remove-wrap">
+                                    <td >
+                                        <div class="sc-productwrap">
+                                            <div class="sc-product-thumb">
+                                                {% if elm.image %}
+                                                    <div class="sc-product-thumb">
+                                                        <img src="{{elm.image.url}}"  value="{{elm.image.url}}" class="img-fluid">
+                                                    </div>
+                                                {% else %}
+                                                    <img src='' alt="محصول">
+                                                {% endif %}
+                                            </div>
+                                            <div class="sc-product-details">
+                                                <a href="{% url 'product:detailproduct' elm.id %}"  class="sc-product-ttl" >{{elm.name}}</a>
+                                            </div>
+                                        </div>      
+                                    </td>
+                                    <td><span class="sc-product-prc">{{elm.price}}</span></td>
+                                    {% if elm.capacity > 0 %}
+                                    <td><span class="sc-wishlist-status stock-availble">در انبار</span></td>
+                                    {% else %}
+                                    <td><span class="sc-wishlist-status stock-out">تمام شده</span></td>
+                                    {% endif %}
+                                    {% if elm.capacity > 0 %}
+                                    <td>
+                                        <a href='{%static  "javascript:void(0);" %}' class="e-btn wishlist-ac">افزودن به سبد </a>
+                                    </td>
+                                  {% else %}
+                                    <td>
+
+                                       <button type="button" class="wishlist-ac" style="background: #5f5f5f ; width:   120px ; height: 50px ; color: white" disabled>افزودن به سبد </button>
+                                    </td>
+                                  {% endif %}
+                                    <td>
+                                        <a href="{% url 'Product:del_wishlist' elm.id %}" class="sc-produc-remove e-remove-product">
+                                            <img src='{%static "assets/images/index1/svg/cut.svg" %}' alt="icon">
+                                        </a>
+                                    </td>
+                                  </tr> 
+                                {%endfor%} 
+                                {%endif%}                                                                                                                                  
+                                </tbody>
+                              </table>
+                        </form>
+                    </div>
+                </div>                      
+            </div>          
+        </div>
+    </div>
+</div>
+{% endblock main %}

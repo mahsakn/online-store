@@ -1,0 +1,53 @@
+
+{% extends 'home.html' %}
+
+{% load static %}
+
+
+{% block main %}
+    <!-- Breadcumbs start -->
+    <div class="e-breadcumb-wrap text-center">
+        <h2 class="e-breadcumb-title">ثبت نام</h2>
+        <ul class="e-breadcumb-kist">
+            <li>
+                <a href="{% url 'home' %}">خانه </a>
+            </li>
+            <li>
+                <a href="{% url 'user:register' %}">ثبت نام</a>
+            </li>
+        </ul>
+    </div>
+    <!-- Product Category start -->
+    <div class="e-forgotpassword-wrap e-forgotpassword-cloth">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="e-fp-box">
+                        <form method="post" action="{% url 'user:register' %}">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p style=color:red >{{ register_form.errors.email }}</p>
+                                    <br>
+                                    <br>
+                                    <p class="mb-20">برای احراز هویت اولیه لطفا ایمیل خود را وارد کنید در صورت درست بودن
+                                        ادرس ایمیل کد احراز هویت برای شما ارسال می شود.</p>
+                                    <br>
+                                        <label>ایمیل : </label>
+                                        {{ register_form.email }}
+                                    <br>
+                                    <br>
+                                </div>
+                                <div class="col-md-12">
+                                    <button type="submit" class="e-btn">ارسال کد</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock main %}
