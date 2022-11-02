@@ -1,3 +1,6 @@
+
+from calendar import c
+from urllib import request
 from django.db.models import Q
 from django.views.generic import DetailView, ListView
 from django.contrib.auth.decorators import login_required
@@ -10,7 +13,6 @@ from Products.utils import (
     category,
     comment_product,
     filtering,
-    search
 )
 from Products.models import (
     Product,
@@ -55,6 +57,10 @@ class product_list(ListView):
 
     def get_queryset(self):
         qs = super().get_queryset()
+        params = self.request.GET
+        if len(params) >= 1:
+            qs = filtering(qs , params)
+
         return qs
 
 
@@ -62,21 +68,28 @@ class product_list(ListView):
         cntx = super().get_context_data(**kwargs)
         cntx["search_get"] = self.request.GET.get("search")
         cntx["cat_get"] = self.request.GET.get("cat")
+
         if self.request.GET.get('search', ''):
-            cntx["productlist"] = search(self.request.GET.get('search',''))
             cntx["type"] = 'نتایج جستجو'
         if self.request.GET.get('cat',''):
-            cntx["productlist"] = category(self.request.GET.get('cat',''))
             cat = Category.get_cat(self.request.GET.get('cat',''))
+            cntx["category"] = cat
             if cat.category_p:
                 cntx["type"] = f"{cat.category_p.title}/{cat.title}"
             else:
                 cntx["type"] = f"{cat.title}"
-        if self.request.GET.get('ftr',''):
-            cntx["productlist"] = filtering(self.request.GET.get('ftr',''))
+
+        for k,v in self.request.GET.items():
+            self.request.session[k]=v
+
+        brands = self.get_queryset().values_list("brand",flat=True)
+        brands_s = set(brands)
+
+        print(brands_s)
+
 
         
-        
+        cntx["brands"] = brands_s
 
         return cntx
 

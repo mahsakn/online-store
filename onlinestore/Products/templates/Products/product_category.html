@@ -33,20 +33,30 @@
                             </li>
                             <li>
                                 <select name="price">
+                                    {% if request.session.price %}
+                                    <option value={{ request.session.price }}>{{ request.session.price }} </option>
                                     <option value="">قیمت </option>
-                                    <option value="500000,990000">500000 تومان - 990000 تومان</option>
-                                    <option value="1000000,2000000">1000000 تومان - 2000000 تومان</option>
-                                    <option value="3000000,5000000">3000000 تومان - 5000000 تومان</option>
-                                    <option value="5000000,9000000">5000000 تومان - 900000 تومان</option>
+
+                                    {% else %}
+                                    <option value="">قیمت </option>
+                                    {% endif %}
+                                    <option value="10000,100000">10000 تومان - 100000 تومان</option>
+                                    <option value="100000,500000">100000 تومان - 500000 تومان</option>
+                                    <option value="500000,1000000">500000 تومان - 1000000 تومان</option>
+                                    <option value="1000000,100000000">1000000 تومان - 100000000 تومان</option>
                                 </select>
                             </li>
                             <li>
                                 <select name="brand">
+                                    {% if request.session.brand %}
+                                    <option value={{ request.session.brand }}>{{ request.session.brand }} </option>
                                     <option value="">برند</option>
-                                    {% for elm in productlist %}
-                                    {% if elm.brand %}
-                                    <option value="{{elm.brand}}">{{elm.brand}}</option>
+                                    {% else %}
+                                    <option value="">برند</option>
                                     {% endif %}
+
+                                    {% for elm in brands %}
+                                        <option value="{{elm}}">{{elm}}</option>
                                     {% endfor %}
                                 </select>
                             </li>

@@ -25,25 +25,42 @@ def comment_product(product_id):
     return product_comment
 
 
-def search(srch):
-    data = Product.objects.filter(name__contains=srch).order_by('-id')
+def search(qs , srch):
+    data = qs.filter(name__contains=srch).order_by('-id')
     return data
 
-def category(c):
-    data = Product.objects.filter(cat__id=c).order_by('-id')
+def category(qs , c):
+    data = qs.filter(cat__id=c).order_by('-id')
     return data
 
-def filtering(ftr):
-    for key,value in ftr.items():
-        if key == "price":
-            if value!= "": 
-                price=value.split(",")
-                filtered_product = filtered_product.filter(price__range=(int(price[0]),int(price[1])))
-            else : continue
-        elif key == "brand":
-            if value!= "":
-                filtered_product = filtered_product.filter(brand = value)
-            else : continue
-            
-            
-    return filtered_product
+def filtering_brand(qs,brn):
+    data = qs.filter( brand = brn ).order_by('-id')
+    return data
+
+def filtering_price(qs,prc):
+
+    if prc!= "": 
+        price=prc.split(",")
+        data = qs.filter( price__range = (int(price[0]),int(price[1]))).order_by('-id')
+    return data
+
+
+
+def filtering(qs , filter):
+
+    if filter.get("cat",""):
+        qs = category(qs , filter["cat"])
+    if filter.get("search" , "") :
+        qs = search(qs , filter["search"] )
+
+    if filter.get("brand" , "") and filter.get("price" , "") :
+        price=filter["price"].split(",")
+        qs = qs.filter( brand = filter["brand"] , price__range = (int(price[0]),int(price[1])) ).order_by('-id')
+
+    else :
+        if filter.get("brand",""):
+            qs = filtering_brand(qs,filter["brand"])
+        elif filter.get("price",""):
+            qs = filtering_price(qs,filter["price"])
+        
+    return qs
